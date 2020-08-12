@@ -1,6 +1,6 @@
 ﻿using System;
 using Akka.Actor;
-using Tamagotchi.Events;
+using Tamagotchi.Messages;
 
 namespace Tamagotchi.Actors
 {
@@ -8,14 +8,20 @@ namespace Tamagotchi.Actors
     {
         public HungerActor()
         {
-            Receive<DragonAte>(e =>
+            Receive<FeedDragon>(e =>
             {
+                if (Context.System.WhenTerminated.IsCompleted)
+                    return;
+
                 e.Dragon.DecreaseHunger();
                 Console.WriteLine($"{e.Dragon.Name} ate, hunger is now {e.Dragon.Hunger}");
             });
 
-            Receive<DragonNotEating>(e =>
+            Receive<StarveDragon>(e =>
             {
+                if (Context.System.WhenTerminated.IsCompleted)
+                    return;
+
                 e.Dragon.IncreaseHunger();
                 if (e.Dragon.Hunger > 10)
                 {

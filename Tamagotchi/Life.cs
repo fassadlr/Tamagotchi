@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Akka.Actor;
 using Tamagotchi.Actors;
-using Tamagotchi.Events;
+using Tamagotchi.Messages;
 using static Akka.Actor.CoordinatedShutdown;
 
 namespace Tamagotchi
@@ -13,6 +13,7 @@ namespace Tamagotchi
     {
         public readonly Dragon dragon;
         private ActorSystem lifeSystem;
+        private IActorRef dragonActor;
         private IActorRef hungerActor;
 
         public Task Ended { get { return lifeSystem.WhenTerminated; } }
@@ -25,8 +26,8 @@ namespace Tamagotchi
         public void Begin()
         {
             lifeSystem = ActorSystem.Create("lifeSystem");
-            lifeSystem.ActorOf(Props.Create<HappinessActor>());
-            hungerActor = lifeSystem.ActorOf(Props.Create<HungerActor>());
+            dragonActor = lifeSystem.ActorOf(Props.Create<DragonActor>());
+            //hungerActor = lifeSystem.ActorOf(Props.Create(() => new HungerActor()), "hungerActor");
         }
 
         public Task End()
@@ -36,12 +37,19 @@ namespace Tamagotchi
 
         internal void Progress()
         {
-            hungerActor.Tell(new DragonNotEating(dragon));
+            dragonActor.Tell(new IgnoreDragon(dragon));
+            dragonActor.Tell(new StarveDragon(dragon));
+            dragonActor.Tell(new HealthCheck(dragon));
         }
 
         internal void Feed()
         {
-            hungerActor.Tell(new DragonAte(dragon));
+            dragonActor.Tell(new FeedDragon(dragon));
+        }
+
+        internal void Pet()
+        {
+            dragonActor.Tell(new PetDragon(dragon));
         }
     }
 }

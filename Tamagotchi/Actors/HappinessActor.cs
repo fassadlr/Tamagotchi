@@ -1,6 +1,6 @@
 ﻿using System;
 using Akka.Actor;
-using Tamagotchi.Events;
+using Tamagotchi.Messages;
 
 namespace Tamagotchi.Actors
 {
@@ -8,16 +8,22 @@ namespace Tamagotchi.Actors
     {
         public HappinessActor()
         {
-            Receive<DragonAte>(ate =>
+            Receive<PetDragon>(e =>
             {
-                ate.Dragon.IncreaseHappiness();
-                Console.WriteLine($"{ate.Dragon.Name}'s happiness level is {ate.Dragon.Happiness}");
+                e.Dragon.IncreaseHappiness();
+                Console.WriteLine($"{e.Dragon.Name}'s happiness level is {e.Dragon.Happiness}");
             });
 
-            Receive<DragonNotEating>(notEating =>
+            Receive<IgnoreDragon>(e =>
             {
-                notEating.Dragon.DecreaseHappiness();
-                Console.WriteLine($"{notEating.Dragon.Name}'s happiness level is {notEating.Dragon.Happiness}");
+                e.Dragon.DecreaseHappiness();
+                //if (e.Dragon.Happiness == 0)
+                //{
+                //    Console.WriteLine($"{e.Dragon.Name} died of loneliness.");
+                //    Context.System.Terminate();
+                //}
+
+                Console.WriteLine($"{e.Dragon.Name}'s happiness level is {e.Dragon.Happiness}");
             });
         }
     }

@@ -50,8 +50,15 @@ namespace Tamagotchi
             var life = new Life(dragon);
             life.Begin();
 
+            Console.CursorVisible = false;
+
             do
             {
+                if (life.Ended.IsCompleted)
+                    break;
+
+                Console.Clear();
+
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey(true).Key;
@@ -60,23 +67,25 @@ namespace Tamagotchi
 
                     if (key == ConsoleKey.F)
                         life.Feed();
+
+                    if (key == ConsoleKey.P)
+                        life.Pet();
                 }
                 else
                 {
-                    if (life.Ended.IsCompleted)
-                        break;
+                    Console.WriteLine("Press F to feed, P to Pet or Esc to Quit");
 
-                    Console.Clear();
                     life.Progress();
-                    Console.WriteLine("Press F to feed, Esc to Quit");
+
                     Task.Delay(TimeSpan.FromSeconds(intervalSeconds)).GetAwaiter().GetResult();
                 }
             } while (true);
 
             life.End();
-            Console.WriteLine($"{name}'s life ended.");
-
             life.Ended.Wait();
+
+            Console.WriteLine($"{name}'s life ended... Press any key.");
+            Console.ReadKey();
         }
     }
 }

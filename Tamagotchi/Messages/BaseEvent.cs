@@ -1,4 +1,4 @@
-﻿namespace Tamagotchi.Events
+﻿namespace Tamagotchi.Messages
 {
     public abstract class BaseEvent
     {
