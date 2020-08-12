@@ -26,7 +26,7 @@ namespace Tamagotchi
         public void Begin()
         {
             lifeSystem = ActorSystem.Create("lifeSystem");
-            dragonActor = lifeSystem.ActorOf(Props.Create<DragonActor>());
+            dragonActor = lifeSystem.ActorOf(Props.Create(() => new DragonActor(new LifeMetricProcessor(dragon))), "dragonActor");
             //hungerActor = lifeSystem.ActorOf(Props.Create(() => new HungerActor()), "hungerActor");
         }
 

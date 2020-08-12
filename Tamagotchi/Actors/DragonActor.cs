@@ -6,44 +6,44 @@ namespace Tamagotchi.Actors
 {
     public sealed class DragonActor : ReceiveActor
     {
-        public DragonActor()
+        public DragonActor(LifeMetricProcessor lifeMetricProcessor)
         {
             Receive<FeedDragon>(e =>
             {
-                e.Dragon.DecreaseHunger();
+                lifeMetricProcessor.Feed();
             });
 
             Receive<StarveDragon>(e =>
             {
-                e.Dragon.IncreaseHunger();
+                lifeMetricProcessor.Starve();
             });
 
             Receive<PetDragon>(e =>
             {
-                e.Dragon.IncreaseHappiness();
+                lifeMetricProcessor.Pet();
             });
 
             Receive<IgnoreDragon>(e =>
             {
-                e.Dragon.DecreaseHappiness();
+                lifeMetricProcessor.Ignore();
             });
 
             Receive<HealthCheck>(e =>
             {
-                if (e.Dragon.Happiness <= 3)
+                if (e.Dragon.Happiness <= 30)
                     Console.WriteLine($"{e.Dragon.Name} is getting very lonely.");
 
-                if (e.Dragon.Hunger >= 7)
+                if (e.Dragon.Hunger >= 70)
                     Console.WriteLine($"{e.Dragon.Name} is getting very hungry.");
 
-                if (e.Dragon.Happiness == 0)
+                if (e.Dragon.Happiness <= 0)
                 {
                     Console.WriteLine($"{e.Dragon.Name} died of loneliness.");
                     Context.System.Terminate();
                     return;
                 }
 
-                if (e.Dragon.Hunger > 10)
+                if (e.Dragon.Hunger >= Dragon.MaximumHunger)
                 {
                     Console.WriteLine($"{e.Dragon.Name} died of hunger.");
                     Context.System.Terminate();
@@ -51,7 +51,7 @@ namespace Tamagotchi.Actors
 
                 e.Dragon.GrowOlder();
 
-                Console.WriteLine($"{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.LifeStage} and is doing well.");
+                Console.WriteLine($"{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.");
             });
         }
     }

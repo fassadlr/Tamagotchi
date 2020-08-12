@@ -2,6 +2,9 @@
 {
     public sealed class Dragon
     {
+        public const int MaximumHappiness = 100;
+        public const int MaximumHunger = 100;
+
         public readonly string Name;
 
         private int monthsToNextAge;
@@ -9,50 +12,36 @@
         public int Weight { get; private set; }
         public int Happiness { get; private set; }
         public int Hunger { get; private set; }
-
-        public string LifeStage
-        {
-            get
-            {
-                if (Age < 4)
-                    return "Baby";
-
-                if (Age >= 4 && Age < 8)
-                    return "Child";
-
-                if (Age >= 8 && Age < 12)
-                    return "Teen";
-
-                return "Baby";
-            }
-        }
+        public LifeStage Stage { get; private set; }
 
         public Dragon(string name)
         {
             Name = name;
-            Happiness = 10;
+            Happiness = 100;
         }
 
-        internal void DecreaseHappiness()
+        internal void DecreaseHappiness(int factor)
         {
             if (Happiness > 0)
-                Happiness -= 1;
+                Happiness -= factor;
         }
 
-        internal void IncreaseHappiness()
+        internal void IncreaseHappiness(int factor)
         {
-            Happiness += 1;
+            if (Happiness < MaximumHappiness)
+                Happiness += factor;
         }
 
-        internal void DecreaseHunger()
+        internal void DecreaseHunger(int factor)
         {
             if (Hunger > 0)
-                Hunger -= 1;
+                Hunger -= factor;
         }
 
-        internal void IncreaseHunger()
+        internal void IncreaseHunger(int factor)
         {
-            Hunger += 1;
+            if (Hunger < MaximumHunger)
+                Hunger += factor;
         }
 
         internal void GrowOlder()
@@ -63,6 +52,28 @@
                 Age += 1;
                 monthsToNextAge = 0;
             }
+
+            SetLifeStage();
         }
+
+        private void SetLifeStage()
+        {
+            if (Age < 4)
+                Stage = LifeStage.Baby;
+            else if (Age >= 4 && Age < 8)
+                Stage = LifeStage.Child;
+            else if (Age >= 8 && Age < 12)
+                Stage = LifeStage.Teen;
+            else
+                Stage = LifeStage.Adult;
+        }
+    }
+
+    public enum LifeStage
+    {
+        Baby,
+        Child,
+        Teen,
+        Adult
     }
 }

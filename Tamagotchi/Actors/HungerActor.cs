@@ -13,7 +13,7 @@ namespace Tamagotchi.Actors
                 if (Context.System.WhenTerminated.IsCompleted)
                     return;
 
-                e.Dragon.DecreaseHunger();
+                //e.Dragon.DecreaseHunger();
                 Console.WriteLine($"{e.Dragon.Name} ate, hunger is now {e.Dragon.Hunger}");
             });
 
@@ -22,7 +22,7 @@ namespace Tamagotchi.Actors
                 if (Context.System.WhenTerminated.IsCompleted)
                     return;
 
-                e.Dragon.IncreaseHunger();
+                //e.Dragon.IncreaseHunger();
                 if (e.Dragon.Hunger > 10)
                 {
                     Console.WriteLine($"{e.Dragon.Name} died of hunger.");

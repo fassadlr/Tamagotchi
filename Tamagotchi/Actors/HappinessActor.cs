@@ -10,13 +10,13 @@ namespace Tamagotchi.Actors
         {
             Receive<PetDragon>(e =>
             {
-                e.Dragon.IncreaseHappiness();
+                //e.Dragon.IncreaseHappiness();
                 Console.WriteLine($"{e.Dragon.Name}'s happiness level is {e.Dragon.Happiness}");
             });
 
             Receive<IgnoreDragon>(e =>
             {
-                e.Dragon.DecreaseHappiness();
+                //e.Dragon.DecreaseHappiness();
                 //if (e.Dragon.Happiness == 0)
                 //{
                 //    Console.WriteLine($"{e.Dragon.Name} died of loneliness.");
