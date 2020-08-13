@@ -30,6 +30,8 @@ namespace Tamagotchi.Actors
 
             Receive<HealthCheck>(e =>
             {
+                var healthReport = new HealthReport();
+
                 if (e.Dragon.Happiness <= 30)
                     Console.WriteLine($"{e.Dragon.Name} is getting very lonely.");
 
@@ -39,19 +41,27 @@ namespace Tamagotchi.Actors
                 if (e.Dragon.Happiness <= 0)
                 {
                     Console.WriteLine($"{e.Dragon.Name} died of loneliness.");
-                    Context.System.Terminate();
+                    healthReport.Alive = false;
+                    //Context.System.Terminate();
+                    Sender.Tell(healthReport);
+
                     return;
                 }
 
                 if (e.Dragon.Hunger >= Dragon.MaximumHunger)
                 {
                     Console.WriteLine($"{e.Dragon.Name} died of hunger.");
-                    Context.System.Terminate();
+                    healthReport.Alive = false;
+
+                    //Context.System.Terminate();
+                    Sender.Tell(healthReport);
                 }
 
                 e.Dragon.GrowOlder();
 
                 Console.WriteLine($"{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.");
+
+                Sender.Tell(healthReport);
             });
         }
     }
