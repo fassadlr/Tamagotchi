@@ -13,7 +13,9 @@ namespace Tamagotchi
     {
         public readonly Dragon dragon;
         private ActorSystem lifeSystem;
+
         private IActorRef dragonActor;
+        private IActorRef lifeActor;
 
         public Task Ended { get { return lifeSystem.WhenTerminated; } }
 
@@ -25,7 +27,9 @@ namespace Tamagotchi
         public void Begin()
         {
             lifeSystem = ActorSystem.Create("lifeSystem");
+
             dragonActor = lifeSystem.ActorOf(Props.Create(() => new DragonActor(new LifeMetricProcessor(dragon))), "dragonActor");
+            lifeActor = lifeSystem.ActorOf(Props.Create(() => new LifeActor(dragonActor)), "lifeActor");
         }
 
         public Task End()
@@ -37,7 +41,8 @@ namespace Tamagotchi
         {
             dragonActor.Tell(new IgnoreDragon(dragon));
             dragonActor.Tell(new StarveDragon(dragon));
-            dragonActor.Tell(new HealthCheck(dragon));
+
+            lifeActor.Tell(new HealthCheck(dragon));
         }
 
         internal void Feed()

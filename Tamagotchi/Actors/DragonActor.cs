@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Tamagotchi.Messages;
 
 namespace Tamagotchi.Actors
@@ -33,16 +32,15 @@ namespace Tamagotchi.Actors
                 var healthReport = new HealthReport();
 
                 if (e.Dragon.Happiness <= 30)
-                    Console.WriteLine($"{e.Dragon.Name} is getting very lonely.");
+                    healthReport.Message = $"{e.Dragon.Name} is getting very lonely.";
 
                 if (e.Dragon.Hunger >= 70)
-                    Console.WriteLine($"{e.Dragon.Name} is getting very hungry.");
+                    healthReport.Message = $"{e.Dragon.Name} is getting very hungry.";
 
                 if (e.Dragon.Happiness <= 0)
                 {
-                    Console.WriteLine($"{e.Dragon.Name} died of loneliness.");
                     healthReport.Alive = false;
-                    //Context.System.Terminate();
+                    healthReport.Message = $"{e.Dragon.Name} died of loneliness.";
                     Sender.Tell(healthReport);
 
                     return;
@@ -50,16 +48,21 @@ namespace Tamagotchi.Actors
 
                 if (e.Dragon.Hunger >= Dragon.MaximumHunger)
                 {
-                    Console.WriteLine($"{e.Dragon.Name} died of hunger.");
                     healthReport.Alive = false;
-
-                    //Context.System.Terminate();
+                    healthReport.Message = $"{e.Dragon.Name} died of hunger.";
                     Sender.Tell(healthReport);
+
+                    return;
                 }
 
                 e.Dragon.GrowOlder();
 
-                Console.WriteLine($"{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.");
+                if (healthReport.Message == null)
+                {
+                    healthReport.Message = $"{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.";
+                }
+                else
+                    healthReport.Message += $"\r\n{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.";
 
                 Sender.Tell(healthReport);
             });

@@ -1,4 +1,5 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
 using Akka.TestKit.Xunit;
 using Tamagotchi.Actors;
 using Tamagotchi.Messages;
@@ -17,20 +18,13 @@ namespace Tamagotchi.Tests
             // Create the life metric processor.
             var lifeMetricProcessor = new LifeMetricProcessor(dragon);
 
-            var dragonActorRef = Sys.ActorOf(Props.Create(() => new DragonActor(lifeMetricProcessor)));
+            var dragonActor = Sys.ActorOf(Props.Create(() => new DragonActor(lifeMetricProcessor)));
 
             // Starve the dragon until it dies of hunger.
-            for (int i = 0; i < 11; i++)
-            {
-                dragonActorRef.Tell(new StarveDragon(dragon));
-                ExpectNoMsg();
-            }
-
-            // The dragon's hunger should be at maximum.
-            Assert.Equal(100, dragon.Hunger);
+            dragon.IncreaseHunger(100);
 
             // Do a health check on the dragon.
-            dragonActorRef.Tell(new HealthCheck(dragon));
+            dragonActor.Tell(new HealthCheck(dragon));
             Assert.False(ExpectMsg<HealthReport>().Alive);
         }
 
@@ -43,21 +37,38 @@ namespace Tamagotchi.Tests
             // Create the life metric processor.
             var lifeMetricProcessor = new LifeMetricProcessor(dragon);
 
-            var dragonActorRef = Sys.ActorOf(Props.Create(() => new DragonActor(lifeMetricProcessor)));
+            var dragonActor = Sys.ActorOf(Props.Create(() => new DragonActor(lifeMetricProcessor)));
 
-            // Ignore the dragon until it dies of loneliness.
-            for (int i = 0; i < 20; i++)
-            {
-                dragonActorRef.Tell(new IgnoreDragon(dragon));
-                ExpectNoMsg();
-            }
-
-            // The dragon's hunger should be at maximum.
-            Assert.Equal(0, dragon.Happiness);
+            // Starve the dragon until it dies of hunger.
+            dragon.DecreaseHappiness(100);
 
             // Do a health check on the dragon.
-            dragonActorRef.Tell(new HealthCheck(dragon));
+            dragonActor.Tell(new HealthCheck(dragon));
             Assert.False(ExpectMsg<HealthReport>().Alive);
+        }
+
+        [Fact]
+        public void Dragon_CanDie_ViaLifeActor()
+        {
+            // Create a dragon.
+            var dragon = new Dragon("test");
+
+            // Create the life metric processor.
+            var lifeMetricProcessor = new LifeMetricProcessor(dragon);
+
+            var dragonActor = Sys.ActorOf(Props.Create(() => new DragonActor(lifeMetricProcessor)));
+            var lifeActor = Sys.ActorOf(Props.Create(() => new LifeActor(dragonActor)));
+
+            // Starve the dragon until it dies of hunger.
+            dragon.IncreaseHunger(100);
+
+            // Do a health check on the dragon.
+            lifeActor.Tell(new HealthCheck(dragon));
+
+            Watch(lifeActor);
+            ExpectMsg<Terminated>(TimeSpan.FromSeconds(5));
+            Watch(dragonActor);
+            ExpectMsg<Terminated>(TimeSpan.FromSeconds(5));
         }
     }
 }

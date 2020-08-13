@@ -20,13 +20,13 @@
             Happiness = 100;
         }
 
-        internal void DecreaseHappiness(int factor)
+        public void DecreaseHappiness(int factor)
         {
             if (Happiness > 0)
                 Happiness -= factor;
         }
 
-        internal void IncreaseHappiness(int factor)
+        public void IncreaseHappiness(int factor)
         {
             if ((Happiness + factor) > MaximumHappiness)
                 Happiness = MaximumHappiness;
@@ -35,7 +35,7 @@
                 Happiness += factor;
         }
 
-        internal void DecreaseHunger(int factor)
+        public void DecreaseHunger(int factor)
         {
             if (Hunger - factor < 0)
                 Hunger = 0;
@@ -44,7 +44,7 @@
                 Hunger -= factor;
         }
 
-        internal void IncreaseHunger(int factor)
+        public void IncreaseHunger(int factor)
         {
             if (Hunger < MaximumHunger)
                 Hunger += factor;

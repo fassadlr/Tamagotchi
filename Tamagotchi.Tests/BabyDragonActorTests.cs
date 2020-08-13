@@ -28,6 +28,8 @@ namespace Tamagotchi.Tests
             dragonActorRef.Tell(new PetDragon(dragon));
             ExpectNoMsg();
             Assert.Equal(100, dragon.Happiness);
+
+            Sys.Terminate();
         }
 
         [Fact]
@@ -49,7 +51,9 @@ namespace Tamagotchi.Tests
             // Feed the dragon so that it's hunger decreases.
             dragonActorRef.Tell(new FeedDragon(dragon));
             ExpectNoMsg();
-            Assert.Equal(5, dragon.Hunger);
+            Assert.Equal(0, dragon.Hunger);
+
+            Sys.Terminate();
         }
     }
 }

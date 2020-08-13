@@ -8,7 +8,7 @@
 
         public override void Feed()
         {
-            Dragon.DecreaseHunger(5);
+            Dragon.DecreaseHunger(10);
         }
 
         public override void Pet()

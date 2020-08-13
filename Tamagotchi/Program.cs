@@ -7,50 +7,19 @@ namespace Tamagotchi
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Imburse!");
-            Console.WriteLine("This is Tamagotchi.Akka.Net");
-            Console.WriteLine("How long should a month in Tamagotchi's life be in seconds?");
+            Console.WriteLine("Hello Imburse and welcome to Tamagotchi.Akka.Net!");
+            Console.WriteLine();
 
-            int intervalSeconds;
-            do
-            {
-                Console.WriteLine("Please enter a value in seconds (max 60)");
-                var interval = Console.ReadLine();
-                if (!int.TryParse(interval, out intervalSeconds))
-                {
-                    Console.WriteLine("Invalid, please enter a number between 0 and 60.");
-                    continue;
-                }
+            RunGame(SetAgingIntervalInSeconds(), SetDragonName());
+        }
 
-                if (intervalSeconds > 60 || intervalSeconds < 0)
-                {
-                    Console.WriteLine("Invalid, please enter a value between 0 and 60.");
-                    continue;
-                }
-
-                break;
-            } while (true);
-
-            string name;
-            do
-            {
-
-                Console.WriteLine("Please enter a name for your Tamagotchi dragon:");
-                name = Console.ReadLine();
-                if (!string.IsNullOrEmpty(name))
-                    break;
-
-                continue;
-            }
-            while (true);
-
-            Console.WriteLine($"{name}'s life is beginning...");
+        private static void RunGame(int intervalSeconds, string name)
+        {
+            Console.WriteLine($"{name}'s life began...");
 
             var dragon = new Dragon(name);
             var life = new Life(dragon);
             life.Begin();
-
-            Console.CursorVisible = false;
 
             do
             {
@@ -84,8 +53,54 @@ namespace Tamagotchi
             life.End();
             life.Ended.Wait();
 
-            Console.WriteLine($"{name}'s life ended... Press any key.");
+            Console.WriteLine($"GAME OVER");
+            Console.WriteLine($"Press any key...");
             Console.ReadKey();
+        }
+
+        private static int SetAgingIntervalInSeconds()
+        {
+            Console.WriteLine("How long should a month in Tamagotchi's life be in seconds?");
+
+            int intervalSeconds;
+            do
+            {
+                Console.WriteLine("Please enter a value in seconds (max 60)");
+                var interval = Console.ReadLine();
+                if (!int.TryParse(interval, out intervalSeconds))
+                {
+                    Console.WriteLine("Invalid, please enter a number between 0 and 60.");
+                    continue;
+                }
+
+                if (intervalSeconds > 60 || intervalSeconds < 0)
+                {
+                    Console.WriteLine("Invalid, please enter a value between 0 and 60.");
+                    continue;
+                }
+
+                break;
+            } while (true);
+
+            return intervalSeconds;
+        }
+
+        private static string SetDragonName()
+        {
+            string name;
+            do
+            {
+
+                Console.WriteLine("Please enter a name for your Tamagotchi dragon:");
+                name = Console.ReadLine();
+                if (!string.IsNullOrEmpty(name))
+                    break;
+
+                continue;
+            }
+            while (true);
+
+            return name;
         }
     }
 }
