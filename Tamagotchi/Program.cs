@@ -23,10 +23,10 @@ namespace Tamagotchi
 
             do
             {
+                Console.Clear();
+
                 if (life.Ended.IsCompleted)
                     break;
-
-                Console.Clear();
 
                 if (Console.KeyAvailable)
                 {
@@ -43,6 +43,7 @@ namespace Tamagotchi
                 else
                 {
                     Console.WriteLine("Press F to feed, P to Pet or Esc to Quit");
+                    Console.WriteLine();
 
                     life.Progress();
 
@@ -65,7 +66,7 @@ namespace Tamagotchi
             int intervalSeconds;
             do
             {
-                Console.WriteLine("Please enter a value in seconds (max 60)");
+                Console.WriteLine("Please enter a value (max 60):");
                 var interval = Console.ReadLine();
                 if (!int.TryParse(interval, out intervalSeconds))
                 {

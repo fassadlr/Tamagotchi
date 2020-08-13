@@ -16,6 +16,8 @@ namespace Tamagotchi
         public int Hunger { get; private set; }
         public LifeStage Stage { get; private set; }
 
+        private string lastAction;
+
         public Dragon(string name)
         {
             Name = name;
@@ -35,6 +37,8 @@ namespace Tamagotchi
 
             if (Happiness < MaximumHappiness)
                 Happiness += factor;
+
+            lastAction = "Your dragon's happiness improved.";
         }
 
         public void DecreaseHunger(int factor)
@@ -44,6 +48,8 @@ namespace Tamagotchi
 
             if (Hunger > 0)
                 Hunger -= factor;
+
+            lastAction = "You dragon's hunger decreased.";
         }
 
         public void IncreaseHunger(int factor)
@@ -80,16 +86,21 @@ namespace Tamagotchi
         {
             StringBuilder message = new StringBuilder();
 
+            if (Age < 1)
+                message.AppendLine($"{Name} is a {monthsToNextAge} month old {Stage.ToString()} and is still alive.");
+            else
+                message.AppendLine($"{Name} is a {Age} year old {Stage.ToString()} and is still alive.");
+
+            message.AppendLine(lastAction);
+            lastAction = null;
+
+            message.AppendLine($"Happiness: {Happiness} Hunger: {Hunger}");
+
             if (Happiness <= 30)
-                message.AppendLine($"{Name} is getting very lonely.");
+                message.AppendLine($"{Name} is getting very lonely...");
 
             if (Hunger >= 70)
-                message.AppendLine($"{Name} is getting very hungry.");
-
-            if (Age < 1)
-                message.AppendLine($"{Name} is a {monthsToNextAge} month old {Stage.ToString()} and is doing well.");
-            else
-                message.AppendLine($"{Name} is a {Age} year old {Stage.ToString()} and is doing well.");
+                message.AppendLine($"{Name} is getting very hungry...");
 
             return message.ToString();
         }
