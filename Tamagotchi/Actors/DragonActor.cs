@@ -29,13 +29,10 @@ namespace Tamagotchi.Actors
 
             Receive<HealthCheck>(e =>
             {
-                var healthReport = new HealthReport();
-
-                if (e.Dragon.Happiness <= 30)
-                    healthReport.Message = $"{e.Dragon.Name} is getting very lonely.";
-
-                if (e.Dragon.Hunger >= 70)
-                    healthReport.Message = $"{e.Dragon.Name} is getting very hungry.";
+                var healthReport = new HealthReport
+                {
+                    Message = e.Dragon.ToString()
+                };
 
                 if (e.Dragon.Happiness <= 0)
                 {
@@ -56,13 +53,6 @@ namespace Tamagotchi.Actors
                 }
 
                 e.Dragon.GrowOlder();
-
-                if (healthReport.Message == null)
-                {
-                    healthReport.Message = $"{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.";
-                }
-                else
-                    healthReport.Message += $"\r\n{e.Dragon.Name} is a {e.Dragon.Age} year old {e.Dragon.Stage.ToString()} and is doing well.";
 
                 Sender.Tell(healthReport);
             });

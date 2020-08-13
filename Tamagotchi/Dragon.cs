@@ -1,4 +1,6 @@
-﻿namespace Tamagotchi
+﻿using System.Text;
+
+namespace Tamagotchi
 {
     public sealed class Dragon
     {
@@ -72,6 +74,24 @@
                 Stage = LifeStage.Teen;
             else
                 Stage = LifeStage.Adult;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder message = new StringBuilder();
+
+            if (Happiness <= 30)
+                message.AppendLine($"{Name} is getting very lonely.");
+
+            if (Hunger >= 70)
+                message.AppendLine($"{Name} is getting very hungry.");
+
+            if (Age < 1)
+                message.AppendLine($"{Name} is a {monthsToNextAge} month old {Stage.ToString()} and is doing well.");
+            else
+                message.AppendLine($"{Name} is a {Age} year old {Stage.ToString()} and is doing well.");
+
+            return message.ToString();
         }
     }
 

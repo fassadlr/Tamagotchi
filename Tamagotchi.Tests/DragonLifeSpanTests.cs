@@ -39,7 +39,7 @@ namespace Tamagotchi.Tests
 
             var dragonActor = Sys.ActorOf(Props.Create(() => new DragonActor(lifeMetricProcessor)));
 
-            // Starve the dragon until it dies of hunger.
+            // Ignore the dragon until it dies of loneliness.
             dragon.DecreaseHappiness(100);
 
             // Do a health check on the dragon.
@@ -47,6 +47,16 @@ namespace Tamagotchi.Tests
             Assert.False(ExpectMsg<HealthReport>().Alive);
         }
 
+        /// <summary>
+        /// PLEASE NOTE 
+        /// 
+        /// That this test fails when the whole test suite is executed together.
+        /// 
+        /// Although the tests run sequentially, I suspect it might an issue with the static sys container 
+        /// tear down for the xUnit implementation of the TestKit.
+        /// 
+        /// It runs OK on its own or in conjunction with the rest of the test in this class.
+        /// </summary>
         [Fact]
         public void Dragon_CanDie_ViaLifeActor()
         {
