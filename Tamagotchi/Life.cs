@@ -7,14 +7,13 @@ using static Akka.Actor.CoordinatedShutdown;
 namespace Tamagotchi
 {
     /// <summary>
-    /// This class sets up and runs the actors.
+    /// This class sets up and runs the dragon's life.
     /// </summary>
     public sealed class Life
     {
         public readonly Dragon dragon;
         private ActorSystem lifeSystem;
         private IActorRef dragonActor;
-        private IActorRef hungerActor;
 
         public Task Ended { get { return lifeSystem.WhenTerminated; } }
 
@@ -27,7 +26,6 @@ namespace Tamagotchi
         {
             lifeSystem = ActorSystem.Create("lifeSystem");
             dragonActor = lifeSystem.ActorOf(Props.Create(() => new DragonActor(new LifeMetricProcessor(dragon))), "dragonActor");
-            //hungerActor = lifeSystem.ActorOf(Props.Create(() => new HungerActor()), "hungerActor");
         }
 
         public Task End()

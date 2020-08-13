@@ -8,27 +8,27 @@
 
         public override void Feed()
         {
-            base.Dragon.DecreaseHunger(15);
+            Dragon.DecreaseHunger(15);
         }
 
         public override void Pet()
         {
-            base.Dragon.IncreaseHappiness(10);
+            Dragon.IncreaseHappiness(10);
         }
 
         public override void Ignore()
         {
-            base.Dragon.DecreaseHappiness(10);
+            Dragon.DecreaseHappiness(10);
         }
 
         public override void Starve()
         {
-            base.Dragon.IncreaseHunger(5);
+            Dragon.IncreaseHunger(5);
         }
 
         public override bool IsApplicable()
         {
-            return base.Dragon.Stage == LifeStage.Teen;
+            return Dragon.Stage == LifeStage.Teen;
         }
     }
 }

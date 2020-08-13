@@ -28,12 +28,18 @@
 
         internal void IncreaseHappiness(int factor)
         {
+            if ((Happiness + factor) > MaximumHappiness)
+                Happiness = MaximumHappiness;
+
             if (Happiness < MaximumHappiness)
                 Happiness += factor;
         }
 
         internal void DecreaseHunger(int factor)
         {
+            if (Hunger - factor < 0)
+                Hunger = 0;
+
             if (Hunger > 0)
                 Hunger -= factor;
         }
@@ -44,7 +50,7 @@
                 Hunger += factor;
         }
 
-        internal void GrowOlder()
+        public void GrowOlder()
         {
             monthsToNextAge += 1;
             if (monthsToNextAge > 12)
